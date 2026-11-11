@@ -1,0 +1,57 @@
+// ===================
+// © AngelaMos | 2026
+// stat-card.module.scss
+
+// CSS module for the dashboard metric card component
+
+// Styles a column flex card with surface background, muted
+// border, and large border radius. Displays a 3xl semibold
+// value with tight letter spacing, an sm lighter label, and
+// an optional xs muted sublabel. Connects to
+// components/stat-card, styles/_tokens
+// ===================
+
+@use '@/styles/tokens' as *;
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: $space-1;
+  position: relative;
+  min-height: 112px;
+  padding: 18px 19px;
+  background: linear-gradient(145deg, #12253c 0%, #0e1d30 100%);
+  border: 1px solid #243c57;
+  border-radius: 10px;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.13);
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 100%;
+    background: #3998d7;
+    opacity: 0.9;
+  }
+}
+
+.value {
+  font-size: $font-size-3xl;
+  font-weight: $font-weight-semibold;
+  color: #eaf4ff;
+  line-height: $line-height-none;
+  letter-spacing: $tracking-tight;
+}
+
+.label {
+  font-size: $font-size-sm;
+  color: #9ab0c9;
+}
+
+.sublabel {
+  font-size: $font-size-xs;
+  color: #718ba8;
+}

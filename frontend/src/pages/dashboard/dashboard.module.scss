@@ -1,0 +1,277 @@
+// ===================
+// © AngelaMos | 2026
+// dashboard.module.scss
+
+// CSS module for the dashboard page layout
+
+// Styles a padded column flex page with a 4-column
+// responsive stat row (collapsing to 2 then 1 at lg/sm
+// breakpoints), a severity section with a proportional
+// colored bar (high/medium/low segments with animated
+// widths) and dot legend, a 2-column bottom row
+// (collapsing to 1 at lg) for the alert feed and ranked
+// lists with monospace labels and tabular-nums counts, and
+// a severity-high-themed WebSocket error banner. Connects
+// to pages/dashboard, styles/_index
+// ===================
+
+@use '@/styles' as *;
+
+.page {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 30px clamp(18px, 3vw, 42px) 42px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.pageIntro {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 4px 0 8px;
+
+  @include breakpoint-down('sm') { align-items: flex-start; flex-direction: column; }
+}
+
+.eyebrow {
+  color: #69b9f3;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+}
+
+.introTitle {
+  margin: 8px 0 6px;
+  color: #edf5ff;
+  font-size: clamp(22px, 2.3vw, 30px);
+  line-height: 1.15;
+  font-weight: 650;
+  letter-spacing: -0.035em;
+}
+
+.introText {
+  max-width: 620px;
+  margin: 0;
+  color: #8ea4bf;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.liveStatus {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 12px;
+  border: 1px solid #29415d;
+  border-radius: 7px;
+  color: #a8bdd4;
+  background: rgba(17, 37, 60, 0.7);
+  white-space: nowrap;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.liveDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #f0b44d;
+}
+
+.live .liveDot { background: #38d39b; box-shadow: 0 0 10px rgba(56, 211, 155, 0.65); }
+.disconnected .liveDot { background: #f0b44d; }
+
+.analysisPanel {
+  padding: 19px 20px 17px;
+  border: 1px solid #1e344e;
+  border-radius: 11px;
+  background: linear-gradient(135deg, rgba(17, 37, 61, 0.88), rgba(12, 27, 45, 0.94));
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+}
+
+.sectionHeading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 17px;
+
+  h3 { margin: 5px 0 0; color: #e5f0fc; font-size: 14px; font-weight: 600; }
+}
+
+.panelHint { color: #7892ad; font-size: 10px; }
+
+
+.loading {
+  @include flex-center;
+  height: 300px;
+  color: $text-muted;
+  font-size: $font-size-sm;
+}
+
+.statRow {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+
+  @include breakpoint-down('lg') {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include breakpoint-down('sm') {
+    grid-template-columns: 1fr;
+  }
+}
+
+.severitySection {
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: $radius-lg;
+}
+
+.severityBar {
+  display: flex;
+  height: 12px;
+  border-radius: $radius-full;
+  overflow: hidden;
+  background: $bg-surface-300;
+}
+
+.severityBarEmpty {
+  height: 12px;
+  border-radius: $radius-full;
+  background: $bg-surface-300;
+  @include flex-center;
+  font-size: $font-size-2xs;
+  color: $text-muted;
+}
+
+.severityHigh {
+  background: $severity-high;
+  transition: width $duration-slow $ease-out;
+}
+
+.severityMedium {
+  background: $severity-medium;
+  transition: width $duration-slow $ease-out;
+}
+
+.severityLow {
+  background: $severity-low;
+  transition: width $duration-slow $ease-out;
+}
+
+.legend {
+  display: flex;
+  gap: $space-5;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  font-size: $font-size-xs;
+  color: $text-lighter;
+}
+
+.legendDot {
+  width: 8px;
+  height: 8px;
+  border-radius: $radius-full;
+}
+
+.dotHigh {
+  background: $severity-high;
+}
+
+.dotMedium {
+  background: $severity-medium;
+}
+
+.dotLow {
+  background: $severity-low;
+}
+
+.bottomRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+
+  @include breakpoint-down('lg') {
+    grid-template-columns: 1fr;
+  }
+}
+
+.lists {
+  display: flex;
+  flex-direction: column;
+  gap: $space-4;
+}
+
+.rankedList {
+  padding: $space-5;
+  background: $bg-surface-100;
+  border: 1px solid $border-muted;
+  border-radius: $radius-lg;
+}
+
+.rankedTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $text-default;
+  margin: 0 0 $space-3;
+}
+
+.rankedItems {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: $space-1;
+}
+
+.rankedItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: $space-1-5 0;
+  font-size: $font-size-xs;
+}
+
+.rankedLabel {
+  color: $text-light;
+  font-family: monospace;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rankedCount {
+  color: $text-lighter;
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+  margin-left: $space-3;
+}
+
+.emptyText {
+  font-size: $font-size-xs;
+  color: $text-muted;
+}
+
+.wsError {
+  padding: $space-3 $space-4;
+  background: $severity-high-bg;
+  border: 1px solid $severity-high;
+  border-radius: $radius-md;
+  font-size: $font-size-xs;
+  color: $severity-high;
+}

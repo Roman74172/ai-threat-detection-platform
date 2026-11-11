@@ -1,0 +1,434 @@
+// ===================
+// © AngelaMos | 2026
+// shell.module.scss
+
+// Application shell layout styles with collapsible sidebar
+// and responsive mobile drawer
+
+// Styles a fixed-position sidebar (240px expanded, 64px
+// collapsed) with dot-grid background, NavLink items with
+// hover and active states, red-tinted nav icons, a chevron
+// collapse toggle hidden on mobile, and a slide-in mobile
+// drawer with overlay dismiss. The main content area adjusts
+// margin-left to match sidebar width, contains a sticky
+// header with dot-grid background and mobile hamburger
+// button, and a scrollable content region with radial-dot
+// background pattern. Includes error and loading fallback
+// states. Connects to core/app/shell, styles/_index
+// ===================
+
+@use '@/styles' as *;
+
+$sidebar-width: 240px;
+$sidebar-collapsed-width: 64px;
+$header-height: 68px;
+
+.shell {
+  display: flex;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: $sidebar-width;
+  background: linear-gradient(180deg, #101e32 0%, #0c1728 100%);
+  border-right: 1px solid #20324a;
+  display: flex;
+  flex-direction: column;
+  z-index: $z-fixed;
+  @include transition-fast;
+
+  &.collapsed {
+    width: $sidebar-collapsed-width;
+  }
+
+  @include breakpoint-down('sm') {
+    transform: translateX(-100%);
+
+    &.open {
+      transform: translateX(0);
+    }
+
+    &.collapsed {
+      width: $sidebar-width;
+    }
+  }
+}
+
+.sidebarHeader {
+  height: $header-height;
+  padding: 0 $space-3;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid $border-default;
+
+  .sidebar.collapsed & {
+    justify-content: center;
+    padding: 0;
+  }
+}
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: $font-size-base;
+  font-weight: $font-weight-semibold;
+  color: #eaf4ff;
+  letter-spacing: -0.02em;
+  @include transition-fast;
+
+  .sidebar.collapsed & {
+    justify-content: center;
+    width: 100%;
+  }
+}
+
+.logoMark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid #2d5c82;
+  border-radius: 8px;
+  background: linear-gradient(145deg, #173d5e, #10253d);
+  color: #77c7ff;
+  flex: 0 0 auto;
+
+  svg { width: 17px; height: 17px; }
+}
+
+.logoAccent { color: #69b9f3; }
+
+.nav {
+  flex: 1;
+  padding: $space-3;
+  display: flex;
+  flex-direction: column;
+  gap: $space-1;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  padding: $space-2 $space-3;
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  color: $text-light;
+  @include transition-fast;
+
+  @include hover {
+    background: $bg-surface-200;
+    color: $text-default;
+  }
+
+  &.active {
+    background: $bg-selection;
+    color: $text-default;
+  }
+
+  .sidebar.collapsed & {
+    justify-content: center;
+  }
+}
+
+.navIcon {
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
+  color: #62b7f5;
+  opacity: 0.82;
+
+  .navItem.active & {
+    opacity: 1;
+  }
+}
+
+.navLabel {
+  @include transition-fast;
+
+  .sidebar.collapsed & {
+    display: none;
+  }
+}
+
+.adminItem {
+  margin-top: auto;
+  border-top: 1px solid $border-default;
+  padding-top: $space-3;
+}
+
+.collapseBtn {
+  width: 45px;
+  height: 45px;
+  border-radius: $radius-md;
+  color: #80bdf0;
+  opacity: 0.65;
+  @include flex-center;
+  @include transition-fast;
+
+  svg {
+    width: 23.5px;
+    height: 23.5px;
+  }
+
+  @include hover {
+    background: $bg-surface-200;
+    opacity: 1;
+  }
+
+  @include breakpoint-down('sm') {
+    display: none;
+  }
+}
+
+.sidebarFooter {
+  padding: $space-3;
+  border-top: 1px solid $border-default;
+}
+
+.logoutBtn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  padding: $space-3;
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  color: $text-default;
+  @include transition-fast;
+
+  @include hover {
+    background: $bg-surface-200;
+  }
+
+  .sidebar.collapsed & {
+    justify-content: center;
+
+    .logoutText {
+      display: none;
+    }
+  }
+}
+
+.logoutIcon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.logoutText {
+  font-weight: $font-weight-medium;
+  @include transition-fast;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgb(0, 0, 0, 50%);
+  z-index: calc($z-fixed - 1);
+  display: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+
+  @include breakpoint-down('sm') {
+    display: block;
+  }
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-left: $sidebar-width;
+  min-width: 0;
+  @include transition-fast;
+
+  &.collapsed {
+    margin-left: $sidebar-collapsed-width;
+  }
+
+  @include breakpoint-down('sm') {
+    margin-left: 0;
+
+    &.collapsed {
+      margin-left: 0;
+    }
+  }
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  height: $header-height;
+  background: rgba(10, 21, 37, 0.94);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid $border-default;
+  z-index: $z-sticky;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 $space-4;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+}
+
+.menuBtn {
+  display: none;
+  width: 36px;
+  height: 36px;
+  border-radius: $radius-md;
+  color: $text-light;
+  align-items: center;
+  justify-content: center;
+  @include transition-fast;
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  @include hover {
+    background: $bg-surface-200;
+    color: $text-default;
+  }
+
+  @media (width <= 479px) {
+    display: flex;
+  }
+}
+
+.headingGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.pageTitle {
+  font-size: $font-size-base;
+  font-weight: $font-weight-semibold;
+  color: $text-default;
+  margin-left: 7px;
+  letter-spacing: -0.01em;
+}
+
+.headerContext {
+  margin-left: 7px;
+  color: #7890ad;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+}
+
+.headerMeta {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  color: #91a8c4;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.environment, .headerProduct {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.environmentDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #35c991;
+  box-shadow: 0 0 10px rgba(53, 201, 145, 0.55);
+}
+
+.headerDivider {
+  width: 1px;
+  height: 18px;
+  background: #263b55;
+}
+
+.headerProduct {
+  color: #d8e8fb;
+
+  svg { width: 14px; height: 14px; color: #65b8f4; }
+}
+
+@media (max-width: 600px) {
+  .headerMeta { display: none; }
+  .headerContext { display: none; }
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: $radius-full;
+  background: $bg-surface-300;
+  color: $text-light;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  @include flex-center;
+  cursor: pointer;
+  @include transition-fast;
+
+  @include hover {
+    filter: brightness(1.2);
+  }
+}
+
+.content {
+  flex: 1;
+  overflow-y: auto;
+  background:
+    radial-gradient(ellipse at 50% -20%, rgba(27, 91, 145, 0.14), transparent 58%),
+    #081321;
+}
+
+.loading {
+  @include flex-center;
+  height: 100%;
+  color: $text-muted;
+}
+
+.error {
+  @include flex-column-center;
+  height: 100%;
+  gap: $space-4;
+  padding: $space-6;
+  color: $error-default;
+
+  h2 {
+    font-size: $font-size-xl;
+    font-weight: $font-weight-semibold;
+  }
+
+  pre {
+    font-family: $font-mono;
+    font-size: $font-size-sm;
+    padding: $space-4;
+    background: $bg-surface-200;
+    border-radius: $radius-lg;
+    overflow-x: auto;
+    max-width: 100%;
+  }
+}
